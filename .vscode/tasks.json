@@ -1,0 +1,58 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "NASM-Compile",
+            "command": "${workspaceFolder}/bin/nasm.exe",
+            "args": [ 
+                "-felf32", 
+                "-F", "dwarf", 
+                "-g", 
+                "-i", "${workspaceFolder}",
+                "-o", "${workspaceFolder}/build/${fileBasenameNoExtension}.obj",
+                "${file}" 
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "focus": true,
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "panel": "shared",
+            }
+        },
+        {
+            "label": "LD-link",
+            "command": "${workspaceFolder}/bin/ld/ld.exe",
+            "args": [
+                "-g",
+                "-o", "${workspaceFolder}/build/${fileBasenameNoExtension}.exe",
+                "-estart",
+                "${workspaceFolder}/build/${fileBasenameNoExtension}.obj",
+                "${workspaceFolder}/bin/ld/libmsvcrt.a",
+                "${workspaceFolder}/bin/ld/libkernel32.a"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": [ "NASM-Compile" ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "pattern": {
+                    "regexp": "error"
+                }
+            },
+            "presentation": {
+                "focus": true,
+                "panel": "shared",
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": false,
+            }
+        }
+    ]
+}
